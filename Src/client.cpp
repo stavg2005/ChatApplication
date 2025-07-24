@@ -4,8 +4,6 @@
 #include <iostream>
 
 
-std::shared_ptr<Client> global_client;  // set from main()
-
 namespace net = boost::asio;
 using     tcp = net::ip::tcp;
 

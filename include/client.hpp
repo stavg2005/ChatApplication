@@ -69,4 +69,3 @@ private:
     std::string        name_;      ///< cached “clean” name (no trailing \n)
     std::atomic_bool   running_{true};
 };
-extern std::shared_ptr<Client> global_client;
