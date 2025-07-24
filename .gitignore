@@ -32,6 +32,8 @@ Thumbs.db         # Windows
 
 # ───────────── Logs ─────────────
 *.log
+.cache/
+.cache/clangd/
 
 # ───────────── User-specific config ─────────────
 *.user
