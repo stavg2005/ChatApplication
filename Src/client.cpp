@@ -99,19 +99,19 @@ void Client::read_loop()
                 if (!(ec == net::error::eof ||
                       ec == net::error::operation_aborted ||
                       ec == net::error::connection_reset)) {
-                    std::cerr << "Read failed: " << ec.message() << '\n';
-                }            // ← only log real errors
+                    std::cerr << "Read failed: " << ec.message() << '\n'; // ← only log real errors
+                }           
                     
                 
                 self->running_ = false;
-                return;                                    // stop the loop
+                return;                                   
             }
 
             std::istream is(&self->resp_buf_);
             std::string line;
             std::getline(is, line);
             self->show_incoming(line);
-            self->read_loop();                             // tail‑recursion
+            self->read_loop();                             
         });
 }
 
@@ -135,7 +135,7 @@ void Client::launch_input_loop()
             if (line.empty())
                 continue;
 
-            con::erase_previous_line();   // erase local echo
+            con::erase_previous_line(); // erase local echo
             line += '\n';
             net::post(self->io_, [self, msg = std::move(line)]() mutable {
                 self->write(std::move(msg));
@@ -150,12 +150,20 @@ void Client::send_quit() {
 
     write("/quit\n");  // send command to server
 
-    // Optional: flush and sleep shortly if needed
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
     boost::system::error_code ec;
-    socket_.shutdown(tcp::socket::shutdown_both, ec);
-    socket_.close(ec);
+    if (socket_.is_open()) {
+        boost::system::error_code ec;
+        if (auto rc = socket_.shutdown(tcp::socket::shutdown_both, ec);
+            rc && rc != boost::asio::error::not_connected) {
+        std::cerr << "shutdown failed: " << rc.message() << '\n';
+    }
+
+    if (auto rc = socket_.close(ec);
+        rc && rc != boost::asio::error::not_connected) {
+      std::cerr << "close failed: " << rc.message() << '\n';
+    }
+  }
 
     if (input_thread_.joinable())
         input_thread_.join();

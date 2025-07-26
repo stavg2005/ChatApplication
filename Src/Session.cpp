@@ -43,7 +43,7 @@ void Session::do_read() {
             std::string line;
             std::getline(is, line);
 
-            if (line == "/quit") {                      // client wants out
+            if (line == "/quit") {  // client wants out
                 if (dis_callback_) dis_callback_(client_id_);
                 stop();
                 return;

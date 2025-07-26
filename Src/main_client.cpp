@@ -10,7 +10,7 @@ namespace {
 
     void signal_handler(int) {
         if (cleanup_handler)
-            cleanup_handler();  // Call the captured handler
+            cleanup_handler(); 
     }
 }
 
@@ -25,10 +25,10 @@ int main(int argc, char* argv[]) {
     auto client = std::make_shared<Client>(
         io, argv[1], static_cast<unsigned short>(std::stoi(argv[2])));
 
-    // Set the cleanup handler before running io
+    
     cleanup_handler = [client] {
         std::cout << "\n[Client] Ctrl+C pressed. Sending /quit and exiting...\n";
-        client->send_quit();  // Whatever your shutdown logic is
+        client->send_quit();  
     };
 
     std::signal(SIGINT, signal_handler);  // Register Ctrl+C signal

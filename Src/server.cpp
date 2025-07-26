@@ -53,10 +53,10 @@ void Server::broadcast(const std::string& payload){
 
 void Server::broadcastNoEcho(int id, const std::string& payload){
     recent_messages_.push_back(payload);
-    for (auto& [client_id, entry] : clients_) {         // client_id is the map key
+    for (auto& [client_id, entry] : clients_) { 
         if (client_id == id)                     // ← skip echo
             continue;
-        entry->session->deliver(payload);               // broadcast
+        entry->session->deliver(payload);   // broadcast
     }
         
 }
